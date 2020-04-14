@@ -8,8 +8,6 @@ from Config.config import CLASS_NAMES
 class ObjectDetector:
 
     def __init__(self):
-
-        self.cam = PiCamera()
         self.model = cv2.dnn.readNetFromTensorflow('yolo/frozen_inference_graph.pb', 'yolo/ssd_mobilenet_v2_coco_2018_03_29.pbtxt')
         self.answer = []
 
@@ -19,7 +17,7 @@ class ObjectDetector:
                 return value
 
     def detectObject(self):
-        
+        self.cam = PiCamera()
         self.cam.start_preview()
         self.cam.capture('yolo/img.jpg')
         self.cam.close()
@@ -33,7 +31,7 @@ class ObjectDetector:
             confidence = detection[2]
             if confidence > .5:
                 class_id = detection[1]
-                class_name = id_class_name(class_id, CLASS_NAMES)
+                class_name = self.id_class_name(class_id, CLASS_NAMES)
                 self.answer.append(class_name)
                 # print(str(str(class_id) + " " + str(detection[2]) + " " + id_class_name(class_id, CLASS_NAMES)))
                 box_x = detection[3] * self.image_width
